@@ -96,7 +96,7 @@ class GraphTraversal {
     }
 }
 
-var graph = new ShortestPath();
+var graph = new GraphTraversal();
 graph.addVertex("A");
 graph.addVertex("B");
 graph.addVertex("C");
