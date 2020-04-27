@@ -1,0 +1,97 @@
+class GraphTraversal {
+    constructor() {
+        this.adjancyList = {}
+        this.length = 0
+    }
+    addVertex(vertex) {
+        if (!this.adjancyList[vertex]) {
+            this.adjancyList[vertex] = []
+        }
+        this.length += 1;
+    }
+    addEdge(vertex1, vertex2, weight) {
+        if (this.adjancyList[vertex1] && this.adjancyList[vertex2]) {
+            this.adjancyList[vertex1].push({
+                node: vertex2,
+                weight
+            });
+            this.adjancyList[vertex2].push({
+                node: vertex1,
+                weight
+            })
+        }
+    }
+
+    shortestPath(start, end) {
+        if (!start) {
+            return;
+        }
+        const result = []
+        const visited = {}
+        const queue = [start];
+        visited[start] = true;
+
+        const distance = {};
+        const previous = {};
+
+        for ( i in this.adjancyList) {
+            distance[i] = Infinity;
+            previous[i] = null;
+        }
+        distance[start] = 0;
+
+        while(queue.length){
+            var vt = queue.shift();
+            result.push(vt);
+            
+            this.adjancyList[vt].forEach(neighbour => {
+                let dist = (neighbour.weight + (isFinite( distance[vt]) ?  distance[vt] : 0));
+                if(distance[neighbour.node] > dist) {
+                    distance[neighbour.node] = dist;
+                    previous[neighbour.node] = vt
+                } 
+
+                if(!visited[neighbour.node]){
+                    queue.push(neighbour.node);
+                    visited[neighbour.node] = true;
+                }
+            }) 
+        }
+        let current = previous[end];
+        let path = end;
+
+        while (current != null) {
+            path +=current;
+            current = previous[current]
+            
+        }
+
+        return {distance: distance[end], path: path.split("").reverse()};
+    }
+}
+
+var graph = new GraphTraversal();
+graph.addVertex("A");
+graph.addVertex("B");
+graph.addVertex("C");
+graph.addVertex("D");
+graph.addVertex("E");
+graph.addVertex("F");
+graph.addEdge("A", "B", 4);
+graph.addEdge("A", "C", 2);
+graph.addEdge("C", "D", 2);
+graph.addEdge("D", "E", 3);
+graph.addEdge("E", "F", 1);
+graph.addEdge("B", "E", 3);
+graph.addEdge("C", "F", 4);
+graph.addEdge("E", "F", 1);
+graph.addEdge("D", "F", 1);
+graph.shortestPath("A", "E");
+
+//                  A
+//               /    \ 
+//              B      F
+//              |\    /|
+//              C \  / E
+//               \ \/ /
+//                 D
