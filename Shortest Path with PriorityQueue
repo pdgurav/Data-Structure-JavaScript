@@ -68,7 +68,7 @@ class GraphTraversal {
                         console.log('h')
                         queue.enqueue(
                             neighbour.node,
-                            neighbour.weight
+                            dist
                         )
                     }
                 })
